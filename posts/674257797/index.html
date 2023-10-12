@@ -9,7 +9,7 @@
     <meta http-equiv="Cache-Control" content="no-siteapp">
     <title>
         
-            标签 - MISC
+            2023NewStarCTF-MISC
         
     </title>
     <link rel="shortcut icon" href="#"/>
@@ -32,15 +32,42 @@
 <meta name="generator" content="Hexo 6.3.0"></head>
 <body>
     <a id="cover"></a>
-    <link type="text/css" rel="stylesheet" href="/css/archive.css">
+    <link type="text/css" rel="stylesheet" href="/css/post.css">
 <div id="header" class="header">
     <div class="vertical">
         <div class="inner">
             
-                <h1 class="header-subtitle">标签归档</h1>
+                <h1 class="header-subtitle">2023NewStarCTF-MISC</h1>
                 <div class="header-subinfo">
-                    <p class="article-info-text Chinese"></p>
-                    <p class="article-info-text English"></p>                  
+                    <p class="article-info-text">
+                        <span>
+                            <i class="iconfont icon-time"></i> 发表时间：2023-10-12
+                        </span>
+                        
+                            
+                                <span id="/posts/674257797/" class="leancloud_visitors" data-flag-title="2023NewStarCTF-MISC">
+                                    <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
+                                </span>
+                            
+                            
+                                <span>
+                                    <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/posts/674257797/"></span>
+                                </span>
+                              
+                        
+                    </p>
+                    
+                        
+                            <span class="category-color">CTF</span>
+                        
+                            <span class="category-color">WriteUp</span>
+                        
+                    
+                    
+                        
+                            <span class="tag-color">MISC</span>
+                        
+                    
                 </div>
             
         </div>
@@ -49,37 +76,105 @@
 </div>
 <div id="container">
     
-        
-            <!-- 归档页面、分类归档页面、标签归档页面 -->
-            <div class="articles">
-                <div class="articles-wrap">
-                    <span class="archive-move-on"></span>
-                    <span class="archive-counter">
+        <!-- 文章页面 -->
+        <div id="article">
+            <div class="toc"></div>
+            <div class="article-body">
+                <h2 id="WEEK1"><a href="#WEEK1" class="headerlink" title="[WEEK1]"></a><code>[WEEK1]</code></h2><h3 id="CyberChef-s-Secret"><a href="#CyberChef-s-Secret" class="headerlink" title="CyberChef&#39;s Secret"></a><code>CyberChef&#39;s Secret</code></h3><p>打开<code>flag.txt</code>，一眼base，使用<code>basecrack</code>脚本进行解密</p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/piSB2h6"><img src="https://z1.ax1x.com/2023/10/12/piSB2h6.png" alt="piSB2h6.png"></a></p>
+<p>可以看到实际上是多层不同<code>base</code>编码套娃</p>
+<h3 id="机密图片"><a href="#机密图片" class="headerlink" title="机密图片"></a>机密图片</h3><p>得到一个二维码，扫不出什么东西，只有一个欢迎词，<code>png</code>图片可能<code>LSB</code>有东西，用<code>stegdolve</code>和<code>zsteg</code>都行</p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/piSDnb9"><img src="https://z1.ax1x.com/2023/10/12/piSDnb9.png" alt="piSDnb9.png"></a></p>
+<h3 id="流量！鲨鱼！"><a href="#流量！鲨鱼！" class="headerlink" title="流量！鲨鱼！"></a>流量！鲨鱼！</h3><p>一个不算是很大的流量分析，搜索<code>flag</code>字符串，有很多访问文件的流量，看到有直接访问<code>flag.txt</code>，但是回显包是404，尝试使用过滤器将回显包状态码为200的筛选出来查看</p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/piSs8ne"><img src="https://z1.ax1x.com/2023/10/12/piSs8ne.png" alt="piSs8ne.png"></a></p>
+<p>找到一串<code>base</code>编码，正确解码即可</p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/piSsBjS"><img src="https://z1.ax1x.com/2023/10/12/piSsBjS.png" alt="piSsBjS.png"></a></p>
+<h3 id="压缩包们"><a href="#压缩包们" class="headerlink" title="压缩包们"></a>压缩包们</h3><p>将得到的文件补齐zip压缩包的文件头（<code>50 4B 03 04</code>）,解压出来的<code>flag.zip</code>以为是伪加密，修改标志位（从文件头往后第八个字节）为<code>00</code>之后发现提取时出现数据错误，无法正确提取<code>flag.txt</code>，撤销修改，查看压缩文件注释，有一串<code>base</code>字符</p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/piSsX36"><img src="https://z1.ax1x.com/2023/10/12/piSsX36.png" alt="piSsX36.png"></a></p>
+<p>解码得到</p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/piSyA8P"><img src="https://z1.ax1x.com/2023/10/12/piSyA8P.png" alt="piSyA8P.png"></a></p>
+<p>此消息提示我们要爆破，将之前的<code>flag.zip</code>修改成真加密，将以 <code>50 4B 01 02</code> 开头的数据块的标志位（第10个字节处）也改成09，用<code>ARCHPR</code>进行六位数字爆破</p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/piSyD8x"><img src="https://z1.ax1x.com/2023/10/12/piSyD8x.png" alt="piSyD8x.png"></a></p>
+<p>解压得到<code>flag</code></p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/piSygqe"><img src="https://z1.ax1x.com/2023/10/12/piSygqe.png" alt="piSygqe.png"></a></p>
+<h3 id="空白格"><a href="#空白格" class="headerlink" title="空白格"></a>空白格</h3><p>预期解：</p>
+<p>本道题目应该是<a target="_blank" rel="noopener" href="https://www.dcode.fr/whitespace-language"><code>Whitespace Language</code></a>网站直接解密即可得到<code>flag</code></p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/piS6ZJ1"><img src="https://z1.ax1x.com/2023/10/12/piS6ZJ1.png" alt="piS6ZJ1.png"></a></p>
+<p>非预期解：</p>
+<p>查看文件<code>16</code>进制</p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/piS63od"><img src="https://z1.ax1x.com/2023/10/12/piS63od.png" alt="piS63od.png"></a></p>
+<p>将<code>20</code>替换成<code>点</code>，将<code>09</code>替换成 <code>-</code> ，将<code>0A</code>替换成 <code>/</code> ，最后摩斯解码，发现只有一个 <code>%u66</code>（这里不知道为什么，有大佬明白可以评论解答困惑，感激不尽），看到66感觉是flag（<code>0x66</code>是小写 <code>f</code> 的<code>ASCII</code>码），现在将 <code>/</code> 再换成空格，再进行摩斯解码，得到完整字串，如下</p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/piSczuT"><img src="https://z1.ax1x.com/2023/10/12/piSczuT.png" alt="piSczuT.png"></a></p>
+<p>像是<code>Unicode</code>，但又不完全是，修改一下格式解码即可得到<code>flag</code></p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/piSgVv6"><img src="https://z1.ax1x.com/2023/10/12/piSgVv6.png" alt="piSgVv6.png"></a></p>
+<p>附上我的成品摩斯</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">...--..--. - .....--.--.. - .....--....- - .....--..--- - .....----.-- - .....---.--- - .....--..-- - .....-.----- - .....--.-... - .....--.-.. - .....---.--. - .....--..-- - .....-.----- - .....---.-.. - .....--.---- - .....--.... - .....-.----- - .....--.--.- - .....--.-.. - .....--.---. - .....----..- - .....-.----- - .....---.--- - .....--.-... - .....--...- - .....---.-.. - .....--..-- - .....-.----- - .....---..-- - .....---.... - .....--.-.. - .....--...-- - .....--..-.- - .....-.----- - .....--..-. - .....--....- - .....--.-.- - .....--...-. - .....--.-.. - .....--..-.- - .....--.... - .....--.-.. - .....-----.- - ..</span><br></pre></td></tr></table></figure>
+
+<p><code>ps:</code>简单题目复杂化我是有一手的！</p>
+<h3 id="隐秘的眼睛"><a href="#隐秘的眼睛" class="headerlink" title="隐秘的眼睛"></a>隐秘的眼睛</h3><p>提示很明显，<code>silenteye</code>解码即可得到flag</p>
+<p><img src="C:\Users\shuy1ng\AppData\Roaming\Typora\typora-user-images\image-20231012170257925.png" alt="image-20231012170257925"></p>
+<h2 id="WEEK2"><a href="#WEEK2" class="headerlink" title="[WEEK2]"></a><code>[WEEK2]</code></h2><p>…………….</p>
+<p>注：比赛停止提交再更新</p>
+
+                
+                <p class="end">__END__</p>
+            </div>
+            <div class="article-footer">
+                <div class="suffix-box">
+    <div class="suffix-box-left">
+        <img src="https://z1.ax1x.com/2023/10/11/piS9tjx.jpg" alt="shuy1ng">
+    </div>
+    <div class="suffix-box-right">
+        <span class="suffix-box-title">文章作者：</span>shuy1ng
+        <br>
+        <span class="suffix-box-title">文章出处：</span><a href="/posts/674257797/" target="_blank">2023NewStarCTF-MISC</a>
+        <br>
+        <span class="suffix-box-title">作者签名：</span>It takes a strong man to save himself, and a great man to save another.
+        <br>
+        <span class="suffix-box-title">关于主题：</span><a href="https://github.com/first19326/Hexo-LiveForCode" target="_blank">Hexo - Live For Code</a>
+        <br>
+        <span class="suffix-box-title">版权声明：</span>文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" title="BY-NC-SA" target="_blank">BY-NC-SA</a> 许可协议，转载请注明出处
+        <br>
+    </div>
+    <div style="clear: both;"></div>
+</div>
+                
+                    <div class="category">
+                        分类：
                         
-                            当前标签：<span class="tag">MISC</span>
+                            <a href="/category/CTF/">CTF</a>
                         
-                    </span>
+                            <a href="/category/CTF/WriteUp/">WriteUp</a>
+                        
+                    </div>
+                
+                
+                    <div class="tag">
+                        标签：
+                        
+                            <a href="/tag/MISC/">MISC</a>
+                        
+                    </div>
+                
+                <div class="article-prev-next">
                     
                     
-                        
-                            <div class="archive-title">
-                                <h2 class="archive-year">2023</h2>
-                            </div>
-                            
-                           
-                        <div class="article">
-                            <div class="article-header">
-                                <h1 class="article-title"><a href="/posts/674257797/"><span>2023NewStarCTF-MISC</span></a></h1>
-                                <div class="article-meta">
-                                    <span class="article-time">10-12</span>
-                                </div>
-                            </div>
-                        </div>
+                        <a href="/posts/1112885395/" class="next-prefix">» </a> 下一篇：    <a href="/posts/1112885395/" title="发布于 2023-10-11 10:00">博客主题的链接</a>
                     
                 </div>
             </div>
             
+    <div class="article-comments">
         
+            <div class="comments-title">
+                评论列表
+            </div>
+        
+        <div class="comments-content"></div>
+    </div>
+    
+ 
+        </div>
     
 </div>
     <div id="footer">
